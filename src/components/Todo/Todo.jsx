@@ -2,9 +2,23 @@ import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
 
-export const Todo = ({ item, handleStatus, setTodos }) => {
+export const Todo = ({ item, setTodos }) => {
   const [editingTodo, setEditingTodo] = useState(false);
   const [editedTitle, setEditedTitle] = useState(item.title);
+
+  const handleStatus = useCallback((id) => {
+    setTodos(prevTodos => prevTodos
+      .map((item) => {
+        if (id !== item.id) {
+          return { ...item };
+        }
+
+        return {
+          ...item,
+          completed: !item.completed,
+        };
+      }));
+  }, [setTodos]);
 
   const destroyTodo = useCallback((id) => {
     setTodos(prevTodos => prevTodos.filter(todo => todo.id !== id));
